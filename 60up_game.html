@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> </title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --panel: #ffffff;
+    --ink: #20263a;
+    --muted: #687089;
+    --accent: #5a56e8;
+    --accent-dark: #4540c8;
+    --line: #e3e7f1;
+    --good: #16865b;
+    --bad: #c53e55;
+    --shadow: 0 12px 34px rgba(31, 42, 79, .09);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at top left, #e8eaff 0, transparent 38%), var(--bg);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  button { font: inherit; }
+  .wrap { width: min(1080px, 100% - 28px); margin: 0 auto; padding: 28px 0 36px; }
+  header { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 22px; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; background: var(--accent); color: white; font-size: 25px; box-shadow: 0 7px 18px #5a56e844; }
+  h1 { margin: 0; font-size: clamp(1.4rem, 3vw, 2rem); letter-spacing: -.04em; }
+  .subtitle { color: var(--muted); font-size: .92rem; margin-top: 3px; }
+  .pill { border: 1px solid var(--line); background: #fff; padding: 9px 13px; border-radius: 999px; font-size: .86rem; color: var(--muted); white-space: nowrap; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .stat-label { color: var(--muted); font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+  .stat-value { font-size: clamp(1.55rem, 4vw, 2rem); font-weight: 800; letter-spacing: -.04em; margin-top: 3px; }
+  .stat-value.time-low { color: var(--bad); }
+  .layout { display: grid; grid-template-columns: 1fr; gap: 14px; align-items: stretch; }
+  .central-panel { order: 3; }
+  .layout > section:nth-child(1) { order: 1; }
+  .layout > section:nth-child(2) { order: 2; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; padding: 20px; box-shadow: var(--shadow); min-width: 0; }
+  .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+  h2 { margin: 0; font-size: 1.08rem; letter-spacing: -.02em; }
+  .hint { font-size: .83rem; color: var(--muted); }
+  .center-stage { min-height: 220px; display: grid; place-items: center; border-radius: 18px; background: linear-gradient(145deg, #f7f8ff, #eef0ff); border: 1px dashed #d4d7f7; position: relative; overflow: hidden; }
+  .center-stage::before, .center-stage::after { content: ""; position: absolute; border: 1px solid #dfe2fb; border-radius: 50%; width: 230px; height: 230px; }
+  .center-stage::after { width: 170px; height: 170px; }
+  .central-card { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 9px; }
+  .central-shape { width: 94px; height: 94px; filter: drop-shadow(0 7px 5px #20263a15); }
+  .central-label { display: none; }
+  .central-caption { display: none; }
+  .choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .object-btn { border: 1px solid var(--line); background: white; border-radius: 16px; padding: 13px 8px 11px; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; cursor: pointer; transition: transform .14s, border-color .14s, box-shadow .14s; }
+  .object-btn:hover:not(:disabled) { transform: translateY(-3px); border-color: #aaa7ff; box-shadow: 0 8px 18px #5a56e81b; }
+  .object-btn:focus-visible, .main-btn:focus-visible { outline: 3px solid #9c99ff; outline-offset: 3px; }
+  .object-btn:disabled { cursor: default; opacity: .48; }
+  .shape-svg { width: 50px; height: 50px; display: block; }
+  .obj-name { display: none; }
+  .inventory { min-height: 86px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; align-content: start; }
+  .inventory .object-btn { padding: 8px 5px; }
+  .inventory .shape-svg { width: 43px; height: 43px; }
+  .empty { grid-column: 1 / -1; color: var(--muted); text-align: center; border: 1px dashed var(--line); border-radius: 15px; padding: 28px 12px; font-size: .9rem; line-height: 1.5; }
+  .inventory-count { font-size: .8rem; color: var(--muted); }
+  .status { min-height: 43px; margin-top: 13px; padding: 11px 13px; border-radius: 12px; background: #f5f6fb; color: var(--muted); font-size: .88rem; line-height: 1.4; }
+  .status.good { background: #eaf8f1; color: var(--good); }
+  .status.bad { background: #fff0f2; color: var(--bad); }
+  .controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .main-btn { border: 0; background: var(--accent); color: #fff; border-radius: 13px; padding: 12px 20px; font-weight: 800; cursor: pointer; box-shadow: 0 7px 16px #5a56e82e; transition: background .15s, transform .15s; }
+  .main-btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .secondary-btn { border: 1px solid var(--line); background: white; color: var(--ink); border-radius: 13px; padding: 11px 16px; font-weight: 750; cursor: pointer; }
+  .controls-note { font-size: .82rem; color: var(--muted); }
+  .overlay { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; padding: 18px; background: #171b2b80; backdrop-filter: blur(5px); }
+  .modal { width: min(430px, 100%); border-radius: 24px; background: white; box-shadow: 0 24px 80px #11162b40; padding: 30px; text-align: center; }
+  .modal-icon { font-size: 2.7rem; margin-bottom: 8px; }
+  .modal h2 { font-size: 1.65rem; margin-bottom: 8px; }
+  .modal p { color: var(--muted); line-height: 1.6; margin: 0 0 20px; }
+  .hidden { display: none !important; }
+  footer { text-align: center; color: var(--muted); font-size: .78rem; margin-top: 20px; }
+  @media (max-width: 720px) {
+    .wrap { width: min(100% - 20px, 560px); padding-top: 18px; }
+    header { align-items: flex-start; }
+    .pill { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    .center-stage { min-height: 190px; }
+    .panel { padding: 16px; }
+    .inventory { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 380px) { .stat { padding: 12px; } .choices { gap: 7px; } .object-btn { padding-inline: 4px; } }
+
+  /* Arcade-inspired dark theme: the shapes stay the brightest elements. */
+  :root {
+    --bg: #0d1119;
+    --panel: #171e29;
+    --ink: #eef2f8;
+    --muted: #9aa7b8;
+    --accent: #66d9c3;
+    --accent-dark: #3bb7a2;
+    --line: #2c3747;
+    --good: #66d9a4;
+    --bad: #ff7385;
+    --shadow: 0 16px 38px rgba(0, 0, 0, .22);
+  }
+  body {
+    background:
+      radial-gradient(ellipse at 50% -15%, rgba(60, 91, 120, .26), transparent 55%),
+      radial-gradient(circle at 12% 45%, rgba(55, 77, 99, .09), transparent 32%),
+      var(--bg);
+    color: var(--ink);
+  }
+  .wrap { padding-top: 24px; }
+  .logo {
+    background: linear-gradient(145deg, #2e3a4b, #202a38);
+    border: 1px solid #435268;
+    color: var(--accent);
+    box-shadow: 0 0 24px rgba(102, 217, 195, .09), inset 0 1px rgba(255,255,255,.06);
+  }
+  h1 { letter-spacing: -.045em; }
+  .subtitle { color: #8493a7; }
+  .stat, .panel {
+    background: linear-gradient(155deg, rgba(28, 37, 51, .98), rgba(21, 28, 39, .98));
+    border-color: var(--line);
+    box-shadow: var(--shadow), inset 0 1px rgba(255,255,255,.025);
+  }
+  .stat { border-radius: 16px; padding: 15px 18px; }
+  .stat-label { color: #8e9db1; font-size: .72rem; letter-spacing: .12em; }
+  .stat-value { color: #f4f7fb; }
+  .stat-value.time-low { color: var(--bad); text-shadow: 0 0 18px rgba(255,115,133,.2); }
+  .panel { border-radius: 20px; }
+  .panel-heading { margin-bottom: 16px; }
+  h2 { color: #e6edf6; font-size: 1rem; }
+  .hint, .inventory-count { color: #91a0b3; }
+  .center-stage {
+    min-height: 250px;
+    background:
+      radial-gradient(ellipse at center, rgba(70, 91, 116, .22), transparent 62%),
+      linear-gradient(145deg, #121a25, #101620);
+    border: 1px solid #2e3b4e;
+    box-shadow: inset 0 0 45px rgba(0,0,0,.22);
+  }
+  .center-stage::before, .center-stage::after {
+    border-color: rgba(111, 135, 163, .16);
+    box-shadow: 0 0 28px rgba(80, 110, 145, .05);
+  }
+  .central-shape {
+    width: 106px;
+    height: 106px;
+    filter: drop-shadow(0 9px 12px rgba(0,0,0,.36));
+    transform-origin: center;
+  }
+  .central-shape.pulse-idle {
+    animation: idlePulse 2.8s ease-in-out infinite;
+  }
+  .object-btn {
+    background: linear-gradient(155deg, #222d3c, #1a2330);
+    border-color: #344154;
+    border-radius: 15px;
+    box-shadow: inset 0 1px rgba(255,255,255,.035);
+    transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+  }
+  .object-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.015);
+    border-color: #71869b;
+    background: linear-gradient(155deg, #29374a, #202c3b);
+    box-shadow: 0 10px 24px rgba(0,0,0,.22), 0 0 0 1px rgba(102,217,195,.05);
+  }
+  .object-btn:focus-visible, .main-btn:focus-visible { outline-color: var(--accent); }
+  .object-btn:disabled { opacity: .62; }
+  .shape-svg { filter: drop-shadow(0 3px 4px rgba(0,0,0,.22)); }
+  .inventory .object-btn { min-height: 66px; }
+  .empty {
+    color: #8493a7;
+    border-color: #344154;
+    background: rgba(12,17,25,.28);
+  }
+  .status { background: #202a38; color: #aebbc9; }
+  .status.good { background: rgba(42, 112, 86, .2); color: #80e5b7; }
+  .status.bad { background: rgba(135, 48, 64, .2); color: #ff9aa8; }
+  .main-btn {
+    color: #071714;
+    background: var(--accent);
+    box-shadow: 0 7px 22px rgba(68, 201, 177, .15);
+  }
+  .main-btn:hover { background: #8ce8d7; }
+  .secondary-btn { background: #202a38; color: var(--ink); border-color: #39485c; }
+  .overlay { background: rgba(5, 8, 13, .78); backdrop-filter: blur(9px); }
+  .modal {
+    background: linear-gradient(155deg, #202b3a, #151c27);
+    border: 1px solid #39485c;
+    color: var(--ink);
+    box-shadow: 0 28px 90px rgba(0,0,0,.55);
+  }
+  .modal p { color: #a6b2c2; }
+  footer { color: #7e8da1; }
+  @keyframes idlePulse {
+    0%, 100% {
+      transform: scale(1);
+      filter: drop-shadow(0 9px 12px rgba(0,0,0,.36));
+    }
+    50% {
+      transform: scale(1.065);
+      filter: drop-shadow(0 10px 19px rgba(102,217,195,.22));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+
+
+  /* Keep the game world atmospheric while leaving object tiles visually quiet. */
+  .wrap { padding-top: 22px; }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat { position: relative; overflow: hidden; }
+  .stat::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(125deg, transparent 0 24px, rgba(112,145,173,.045) 25px 26px, transparent 27px 50px);
+    background-size: 180% 180%; animation: panelDrift 24s linear infinite;
+  }
+  .stat > * { position: relative; z-index: 1; }
+  .panel { position: relative; overflow: hidden; isolation: isolate; }
+  .panel::before {
+    content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 12% 20%, rgba(83,125,151,.09) 0 1px, transparent 2px),
+      radial-gradient(circle at 78% 72%, rgba(102,217,195,.06) 0 1px, transparent 2px),
+      repeating-linear-gradient(135deg, transparent 0 31px, rgba(132,158,181,.035) 32px 33px, transparent 34px 64px);
+    background-size: 110px 110px, 150px 150px, 220% 220%;
+    animation: panelDrift 32s linear infinite;
+  }
+  .panel > * { position: relative; z-index: 1; }
+  .panel-heading { margin-bottom: 16px; }
+  .panel h2 { letter-spacing: .035em; }
+  .empty { min-height: 64px; display: grid; place-items: center; letter-spacing: .4em; }
+  .modal { max-height: min(90vh, 780px); overflow-y: auto; }
+  .modal .rules-text { text-align: left; font-size: .94rem; }
+  .modal .rules-text strong { color: #dce7f2; }
+  .modal .rules-text strong:first-child { display: inline-block; margin-bottom: 4px; color: var(--accent); }
+  @keyframes panelDrift {
+    from { background-position: 0 0, 0 0, 0 0; }
+    to { background-position: 110px 110px, -150px 150px, 220px -220px; }
+  }
+  @media (max-width: 720px) {
+    .stats { gap: 9px; }
+    .stat { padding: 13px 15px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stat::before, .panel::before { animation: none !important; }
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="stats" aria-label="Game stats">
+    <div class="stat"><div class="stat-label" id="timeLabel">Zeit / Time</div><div class="stat-value" id="timer">60s</div></div>
+    <div class="stat"><div class="stat-label">Score</div><div class="stat-value" id="score">0</div></div>
+  </section>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-heading"><h2>Deck</h2></div>
+      <div class="choices" id="choices" aria-label="Deck"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading"><h2>Hand</h2></div>
+      <div class="inventory" id="inventory" aria-label="Your hand">
+        <div class="empty"> </div>
+      </div>
+    </section>
+
+    <section class="panel central-panel">
+      <div class="center-stage">
+        <div class="central-card">
+          <svg id="centralShape" class="central-shape" viewBox="0 0 100 100" role="img" aria-label="Central object"></svg>
+          <div id="centralLabel" class="central-label" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="status hidden" id="status" role="status" aria-live="polite"></div>
+      <div class="controls">
+        <button class="main-btn" id="startBtn">▶ Start game</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-icon" id="modalIcon">✦</div>
+    <h2 id="modalTitle">So funktioniert's · How to play</h2>
+    <p id="modalText" class="rules-text">
+      <strong>Deutsch</strong><br>
+      Sammle Objekte vom Deck und tippe auf ein Objekt in deiner Hand, um es einzusetzen. Es ersetzt das Objekt in der Mitte, wenn <strong>Form ODER Farbe</strong> übereinstimmt. Jede erfolgreiche Ersetzung gibt einen Punkt. Du hast 60 Sekunden. Nicht passende Objekte bleiben auf deiner Hand.<br><br>
+      <strong>English</strong><br>
+      Collect objects from the Deck, then tap an item in your Hand to use it. It replaces the center object if its <strong>shape OR color</strong> matches. Each successful replacement earns one point. You have 60 seconds. Non-matching items stay in your Hand.
+    </p>
+    <button class="main-btn" id="modalBtn">Spielen · Play</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const SHAPES = ["Circle", "Square", "Triangle", "Star", "Hexagon"];
+  const COLORS = [
+    { name: "Red", value: "#ef476f" },
+    { name: "Blue", value: "#3478f6" },
+    { name: "Green", value: "#20a878" },
+    { name: "Yellow", value: "#f5b82e" },
+    { name: "Purple", value: "#8b5cf6" }
+  ];
+  const ROUND_SECONDS = 60;
+
+  const $ = (id) => document.getElementById(id);
+  const timerEl = $("timer"), scoreEl = $("score");
+  const centralShapeEl = $("centralShape"), centralLabelEl = $("centralLabel");
+  const choicesEl = $("choices"), inventoryEl = $("inventory"), statusEl = $("status");
+  const startBtn = $("startBtn"), overlay = $("overlay"), modalBtn = $("modalBtn");
+  let central = null, choices = [], inventory = [], score = 0, secondsLeft = ROUND_SECONDS;
+  let running = false, intervalId = null, nextId = 1, centralPulseTimeout = null;
+
+  function resetCentralPulse() {
+    clearTimeout(centralPulseTimeout);
+    centralShapeEl.classList.remove("pulse-idle");
+    if (!running) return;
+    centralPulseTimeout = setTimeout(() => {
+      if (running) centralShapeEl.classList.add("pulse-idle");
+    }, 7000);
+  }
+
+  function randomItem() {
+    return {
+      id: nextId++,
+      shape: SHAPES[Math.floor(Math.random() * SHAPES.length)],
+      color: COLORS[Math.floor(Math.random() * COLORS.length)]
+    };
+  }
+
+  function shapeMarkup(shape, color) {
+    const fill = color.value;
+    const common = `fill="${fill}" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round"`;
+    switch (shape) {
+      case "Circle": return `<circle cx="50" cy="50" r="34" ${common}/>`;
+      case "Square": return `<rect x="18" y="18" width="64" height="64" rx="7" ${common}/>`;
+      case "Triangle": return `<polygon points="50,13 88,82 12,82" ${common}/>`;
+      case "Star": return `<polygon points="50,8 60,37 91,38 67,57 75,87 50,69 25,87 33,57 9,38 40,37" ${common}/>`;
+      case "Hexagon": return `<polygon points="28,15 72,15 91,50 72,85 28,85 9,50" ${common}/>`;
+      default: return "";
+    }
+  }
+
+  function svgFor(item, className = "shape-svg") {
+    return `<svg class="${className}" viewBox="0 0 100 100" aria-hidden="true">${shapeMarkup(item.shape, item.color)}</svg>`;
+  }
+
+  function label(item) { return `${item.color.name} ${item.shape}`; }
+  function matches(item) { return item.shape === central.shape || item.color.name === central.color.name; }
+
+  function setStatus(message, type = "") {
+    statusEl.textContent = message;
+    statusEl.className = `status${type ? " " + type : ""}${message ? "" : " hidden"}`;
+  }
+
+  function renderCentral() {
+    centralShapeEl.innerHTML = shapeMarkup(central.shape, central.color);
+    centralShapeEl.setAttribute("aria-label", label(central));
+    centralLabelEl.textContent = label(central);
+  }
+
+  function renderChoices() {
+    choicesEl.innerHTML = "";
+    choices.forEach((item, index) => {
+      const button = document.createElement("button");
+      button.className = "object-btn";
+      button.type = "button";
+      button.disabled = !running;
+      button.setAttribute("aria-label", `Collect ${label(item)}`);
+      button.innerHTML = svgFor(item);
+      button.addEventListener("click", () => collectItem(item.id));
+      choicesEl.appendChild(button);
+    });
+  }
+
+  function renderInventory() {
+    inventoryEl.innerHTML = "";
+    if (!inventory.length) {
+      inventoryEl.innerHTML = `<div class="empty" aria-hidden="true">· · ·</div>`;
+      return;
+    }
+    inventory.forEach(item => {
+      const button = document.createElement("button");
+      const canUse = running && matches(item);
+      button.className = "object-btn";
+      button.type = "button";
+      button.disabled = !running;
+      button.setAttribute("aria-label", `Use ${label(item)}${canUse ? ", valid replacement" : ", does not match"}`);
+      button.title = "Use object";
+      button.style.borderColor = "";
+      button.innerHTML = svgFor(item);
+      button.addEventListener("click", () => useItem(item.id));
+      inventoryEl.appendChild(button);
+    });
+  }
+
+  function renderStats() {
+    timerEl.textContent = `${secondsLeft}s`;
+    timerEl.classList.toggle("time-low", secondsLeft <= 10);
+    scoreEl.textContent = score;
+  }
+
+  function renderAll() {
+    renderCentral();
+    renderChoices();
+    renderInventory();
+    renderStats();
+  }
+
+  function collectItem(id) {
+    if (!running) return;
+    const index = choices.findIndex(item => item.id === id);
+    if (index < 0) return;
+    const item = choices[index];
+    inventory.push(item);
+    choices[index] = randomItem();
+    setStatus("");
+    renderChoices();
+    renderInventory();
+    renderStats();
+  }
+
+  function useItem(id) {
+    if (!running) return;
+    const index = inventory.findIndex(item => item.id === id);
+    if (index < 0) return;
+    const item = inventory[index];
+    if (!matches(item)) {
+      setStatus("");
+      return;
+    }
+    const old = central;
+    central = item;
+    inventory.splice(index, 1);
+    score++;
+    setStatus("");
+    renderAll();
+    resetCentralPulse();
+  }
+
+  function startGame() {
+    clearInterval(intervalId);
+    central = randomItem();
+    choices = [randomItem(), randomItem(), randomItem()];
+    inventory = [];
+    score = 0;
+    secondsLeft = ROUND_SECONDS;
+    running = true;
+    overlay.classList.add("hidden");
+    startBtn.textContent = "↻ Neu starten · Restart";
+    setStatus("");
+    renderAll();
+    resetCentralPulse();
+    intervalId = setInterval(() => {
+      secondsLeft--;
+      renderStats();
+      if (secondsLeft <= 0) endGame();
+    }, 1000);
+  }
+
+  function endGame() {
+    running = false;
+    clearInterval(intervalId);
+    clearTimeout(centralPulseTimeout);
+    centralShapeEl.classList.remove("pulse-idle");
+    renderChoices();
+    renderInventory();
+    renderStats();
+    $("modalIcon").textContent = score >= 20 ? "🏆" : score >= 10 ? "✨" : "⏱️";
+    $("modalTitle").textContent = "Zeit vorbei! · Time's up!";
+    $("modalText").classList.remove("rules-text");
+    $("modalText").textContent = `Dein Score: ${score} · Your score: ${score}`;
+    modalBtn.textContent = "Nochmal spielen · Play again";
+    overlay.classList.remove("hidden");
+    startBtn.textContent = "▶ Nochmal spielen · Play again";
+    setStatus("");
+  }
+
+  startBtn.addEventListener("click", startGame);
+  modalBtn.addEventListener("click", startGame);
+
+  // Initial preview state: visible objects, but interactions begin only after starting.
+  central = { id: nextId++, shape: "Circle", color: COLORS[4] };
+  choices = [randomItem(), randomItem(), randomItem()];
+  renderAll();
+})();
+</script>
+</body>
+</html>
