@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d1119"><title>60up: Magnitude</title>
+<style>
+:root{--bg:#0d1119;--panel:#171e29;--ink:#eef2f8;--muted:#91a0b3;--accent:#66d9c3;--line:#2c3747;--red:#ef476f;--blue:#3478f6;--yellow:#f5c542;--shadow:0 16px 38px #0005}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -15%,#3c5b7842,transparent 55%),radial-gradient(circle at 12% 45%,#374d6318,transparent 32%),var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{font:inherit}.wrap{width:min(1120px,100% - 28px);margin:auto;padding:22px 0 34px}.stats{display:grid;grid-template-columns:minmax(130px,1.4fr) repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}.stat,.panel{position:relative;overflow:hidden;background:linear-gradient(155deg,#1c2533fa,#151c27fa);border:1px solid var(--line);box-shadow:var(--shadow),inset 0 1px #ffffff06}.stat{border-radius:16px;padding:13px 18px}.brand-stat{display:flex;align-items:center}.brand-mark{width:min(100%,205px);height:auto;display:block;object-fit:contain}.stat-label{color:#8e9db1;font-size:.72rem;font-weight:750;letter-spacing:.12em;text-transform:uppercase}.stat-value{font-size:clamp(1.5rem,4vw,2rem);font-weight:850;letter-spacing:-.04em;margin-top:3px}.time-low{color:#ff7385!important}.panel{border-radius:20px;padding:clamp(14px,2.5vw,24px);isolation:isolate}.panel:before,.stat:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 12% 20%,#537d9717 0 1px,transparent 2px),radial-gradient(circle at 78% 72%,#66d9c30f 0 1px,transparent 2px),repeating-linear-gradient(135deg,transparent 0 31px,#849eb10a 32px 33px,transparent 34px 64px);background-size:110px 110px,150px 150px,220% 220%;animation:drift 32s linear infinite}
+@keyframes drift{to{background-position:110px 110px,-150px 150px,220px -220px}}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}.panel-heading h2{margin:0;font-size:.96rem;letter-spacing:.08em;text-transform:uppercase}.hint,.subtle{color:var(--muted);font-size:.82rem}.target-panel{margin-bottom:14px}.target-stage{min-height:174px;display:grid;place-items:center;position:relative;overflow:hidden;border-radius:16px;background:radial-gradient(ellipse at center,#465b741f,transparent 62%),linear-gradient(145deg,#121a25,#101620);border:1px solid #2e3b4e;box-shadow:inset 0 0 45px #0004}.target-stage:before,.target-stage:after{content:"";position:absolute;width:190px;height:190px;border:1px solid #6f87a329;border-radius:50%}.target-stage:after{width:140px;height:140px}.target-card{position:relative;z-index:1;display:grid;justify-items:center;gap:4px}.target-svg{width:92px;height:92px;filter:drop-shadow(0 9px 12px #0008);animation:targetIn .32s cubic-bezier(.2,.85,.25,1)}@keyframes targetIn{from{transform:scale(.78);opacity:.3}to{transform:scale(1);opacity:1}}
+.row-panel{overflow:visible}.magnitude{width:100%;height:38px;display:block;margin:0 0 4px;overflow:visible}.magnitude polygon{fill:var(--accent);opacity:.82;filter:drop-shadow(0 0 8px #66d9c344)}.scale-labels{display:flex;justify-content:space-between;color:#9aabbc;font-size:.72rem;font-weight:800;letter-spacing:.1em;margin:0 1px 10px}.scale-labels span:first-child{color:var(--accent)}.choices{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:clamp(3px,1vw,10px);width:100%}.choice{appearance:none;min-width:0;aspect-ratio:1/1.08;padding:clamp(3px,1vw,10px) 2px;border:1px solid #344154;border-radius:12px;background:linear-gradient(155deg,#222d3c,#1a2330);display:grid;place-items:center;cursor:pointer;transition:transform .14s,border-color .14s,background .14s,box-shadow .14s;position:relative}.choice:hover:not(:disabled){transform:translateY(-4px);border-color:#71869b;background:linear-gradient(155deg,#29374a,#202c3b);box-shadow:0 10px 24px #0005,0 0 0 1px #66d9c30d}.choice:focus-visible,.main-btn:focus-visible,.secondary-btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}.choice:disabled{cursor:default;opacity:.68}.choice svg{width:clamp(24px,5.3vw,56px);height:auto;filter:drop-shadow(0 3px 4px #0005)}.choice.correct-first{border-color:var(--accent);box-shadow:0 0 0 2px #66d9c32b,0 0 24px #66d9c322}.choice.correct-other{border-color:#8193a8}.choice.wrong{border-color:#ff7385;animation:shake .22s linear}@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.status{min-height:42px;margin-top:14px;padding:10px 13px;border-radius:12px;background:#202a38;color:#aebbc9;font-size:.88rem;line-height:1.4}.status.good{background:#2a705633;color:#80e5b7}.status.bad{background:#87304033;color:#ff9aa8}.controls{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}.main-btn{border:0;border-radius:13px;padding:12px 21px;background:var(--accent);color:#071714;font-weight:850;cursor:pointer;box-shadow:0 7px 22px #44c9b12b;transition:transform .15s,background .15s}.main-btn:hover{background:#8ce8d7;transform:translateY(-1px)}.secondary-btn{border:1px solid #39485c;background:#202a38;color:var(--ink);border-radius:13px;padding:11px 16px;font-weight:750;cursor:pointer}.overlay{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:18px;background:#05080dcc;backdrop-filter:blur(9px)}.modal{width:min(470px,100%);max-height:90vh;overflow:auto;border-radius:24px;padding:clamp(22px,5vw,32px);text-align:center;background:linear-gradient(155deg,#202b3a,#151c27);border:1px solid #39485c;box-shadow:0 28px 90px #0009}.splash-logo{width:min(100%,310px);height:auto;margin:0 auto 18px;display:block;border-radius:9px}.modal h2{font-size:1.55rem;margin:0 0 10px;letter-spacing:-.03em}.modal p{color:#a6b2c2;line-height:1.62;margin:0 0 20px}.rules{text-align:left;font-size:.91rem}.rules strong{color:#dce7f2}.rules .lang{color:var(--accent);font-weight:850;display:block;margin:14px 0 4px}.hidden{display:none!important}footer{text-align:center;color:#718096;font-size:.75rem;margin-top:17px}
+@media(max-width:600px){.wrap{width:calc(100% - 16px);padding-top:12px}.stats{gap:7px;grid-template-columns:minmax(92px,1.25fr) repeat(2,minmax(0,1fr))}.stat{padding:10px}.brand-mark{width:100%}.stat-label{font-size:.61rem}.stat-value{font-size:1.45rem}.panel{padding:12px;border-radius:16px}.target-stage{min-height:145px}.target-svg{width:78px;height:78px}.choices{gap:3px}.choice{border-radius:8px;aspect-ratio:1/1.12}.magnitude{height:29px}.scale-labels{font-size:.62rem;margin-bottom:7px}.panel-heading{margin-bottom:10px}}
+@media(max-width:360px){.choice svg{width:22px}.choices{gap:2px}.choice{padding:2px 0}.stat{padding:8px}.brand-mark{min-width:0}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style></head>
+<body><div class="wrap">
+<section class="stats" aria-label="Game stats"><div class="stat brand-stat"><img class="brand-mark" src="magnitude-logo.png" alt="60up"></div><div class="stat"><div class="stat-label" id="timeLabel">TIME</div><div class="stat-value" id="timer">60s</div></div><div class="stat"><div class="stat-label">SCORE</div><div class="stat-value" id="score">0</div></div></section>
+<main>
+<section class="panel target-panel"><div class="target-stage"><div class="target-card"><svg id="targetShape" class="target-svg" viewBox="0 0 100 100" role="img" aria-label="Target symbol"></svg></div></div></section>
+<section class="panel row-panel">
+<svg class="magnitude" viewBox="0 0 900 38" preserveAspectRatio="none" aria-hidden="true"><polygon points="0,0 900,17 900,21 0,38"/></svg>
+<div class="choices" id="choices" aria-label="Nine symbols in a fixed row"></div><div class="controls"><button class="main-btn" id="startBtn">▶ Start game</button></div></section>
+</main></div>
+<div class="overlay" id="overlay"><div class="modal"><img class="splash-logo" src="magnitude-logo.png" alt="60up"><h2 id="modalTitle">60up: Magnitude</h2><div class="rules" id="modalText"><span class="lang">DEUTSCH</span><p>Finde ein Symbol mit derselben Form ODER derselben Farbe – aber niemals beides. Das exakte Symbol ist falsch. Von links nach rechts gibt es 4, 3, 2 oder 1 Punkt.</p><span class="lang">ENGLISH</span><p>Find a symbol with the same shape OR the same colour — but never both. An exact match is wrong. From left to right, correct symbols score 4, 3, 2 or 1 point.</p></div><button class="main-btn" id="modalBtn">Spielen · Play</button><button class="secondary-btn hidden" id="gameMenuBtn" onclick="location.href='index.html'">Change game · Anderes Spiel</button></div></div>
+<script>
+(()=>{
+'use strict';
+const SHAPES=['Circle','Square','Triangle'];
+const COLORS=[{name:'Red',value:'#ef476f'},{name:'Blue',value:'#3478f6'},{name:'Yellow',value:'#f5c542'}];
+const ROUND_SECONDS=60;
+const $=id=>document.getElementById(id);
+const targetEl=$('targetShape'),choicesEl=$('choices'),timerEl=$('timer'),scoreEl=$('score'),overlay=$('overlay');
+let target=null,row=[],score=0,seconds=ROUND_SECONDS,running=false,timer=null,roundId=0,locked=false;
+function allCombos(){return SHAPES.flatMap(shape=>COLORS.map(color=>({shape,color})));}
+function shuffle(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function shapeMarkup(shape,color){const c=color.value,common=`fill="${c}" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"`;switch(shape){case'Circle':return `<circle cx="50" cy="50" r="34" ${common}/>`;case'Square':return `<rect x="18" y="18" width="64" height="64" rx="7" ${common}/>`;case'Triangle':return `<polygon points="50,13 88,82 12,82" ${common}/>`;default:return '';}}
+function svg(item,cls=''){return `<svg ${cls?`class="${cls}"`:''} viewBox="0 0 100 100" aria-hidden="true">${shapeMarkup(item.shape,item.color)}</svg>`;}
+function label(item){return `${item.color.name} ${item.shape}`;}
+function setStatus(){}
+function eligible(item){return (item.shape===target.shape)!==(item.color.name===target.color.name);}
+
+function renderStats(){timerEl.textContent=`${seconds}s`;timerEl.classList.toggle('time-low',seconds<=10);scoreEl.textContent=score;}
+function renderTarget(){targetEl.innerHTML=shapeMarkup(target.shape,target.color);targetEl.setAttribute('aria-label',`Target: ${label(target)}`);targetEl.classList.remove('target-svg');void targetEl.getBoundingClientRect();targetEl.classList.add('target-svg');}
+function renderRow(){choicesEl.innerHTML='';row.forEach((item,index)=>{const b=document.createElement('button');b.type='button';b.className='choice';b.disabled=!running||locked;b.setAttribute('aria-label',`${label(item)} symbol`);b.innerHTML=svg(item);b.addEventListener('click',()=>choose(index));choicesEl.appendChild(b);});}
+function newRound(){if(!running)return;roundId++;const combos=allCombos().filter(item=>!target||item.shape!==target.shape||item.color.name!==target.color.name);target=combos[Math.floor(Math.random()*combos.length)];locked=false;renderTarget();renderRow();}
+function showPoints(anchor,text,isGood){
+  const rect=anchor.getBoundingClientRect();
+  const pop=document.createElement('div');
+  pop.textContent=text;
+  Object.assign(pop.style,{
+    position:'fixed',left:`${rect.left+rect.width/2}px`,top:`${rect.top+rect.height/2}px`,
+    transform:'translate(-50%,-50%)',zIndex:'99999',pointerEvents:'none',
+    padding:'5px 9px',borderRadius:'9px',border:`1px solid ${isGood?'#8ce8d7':'#ff8797'}`,
+    background:'rgba(12,22,33,.97)',color:isGood?'#8ce8d7':'#ff9aa8',
+    font:'900 22px/1.1 ui-sans-serif,system-ui,sans-serif',letterSpacing:'-.04em',
+    boxShadow:`0 0 20px ${isGood?'rgba(102,217,195,.55)':'rgba(255,115,133,.4)'}`,
+    textShadow:'0 2px 6px #000',whiteSpace:'nowrap'
+  });
+  document.body.appendChild(pop);
+  const animation=pop.animate([
+    {opacity:0,transform:'translate(-50%,-50%)',offset:0},
+    {opacity:1,transform:'translate(-50%,-50%)',offset:.2},
+    {opacity:1,transform:'translate(-50%,-50%)',offset:.72},
+    {opacity:0,transform:'translate(-50%,-50%)',offset:1}
+  ],{duration:450,easing:'linear',fill:'forwards'});
+  animation.onfinish=()=>pop.remove();
+  animation.oncancel=()=>pop.remove();
+}
+function choose(index){if(!running||locked)return;locked=true;const chosen=row[index],valid=eligible(chosen);const eligibleIndices=row.map((item,i)=>eligible(item)?i:-1).filter(i=>i>=0);let earned=0;if(valid){const rank=eligibleIndices.indexOf(index);earned=4-rank;score+=earned;}
+renderStats();const buttons=[...choicesEl.children];buttons.forEach((b,i)=>{b.disabled=true;const rank=eligibleIndices.indexOf(i);if(rank===0)b.classList.add('correct-first');else if(rank>0)b.classList.add('correct-other');if(i===index&&!valid)b.classList.add('wrong');});showPoints(buttons[index],valid?`${earned}`:'0',valid);window.setTimeout(()=>{if(running)newRound();},470);}
+function startGame(){clearInterval(timer);$('gameMenuBtn').classList.add('hidden');score=0;seconds=ROUND_SECONDS;row=shuffle(allCombos());running=true;renderStats();overlay.classList.add('hidden');$('startBtn').textContent='↻ Restart';newRound();timer=setInterval(()=>{seconds=Math.max(0,seconds-1);renderStats();if(seconds===0)endGame();},1000);}
+function endGame(){running=false;clearInterval(timer);locked=true;renderRow();$('modalTitle').textContent="Time's up!";$('modalText').innerHTML=`<p style="text-align:center;font-size:1.2rem"><strong>Your score: ${score}</strong></p><p style="text-align:center">${score>=45?'Outstanding focus!':score>=25?'Great run!':score>=12?'Nice work — try to beat it!':'Good first run. You can improve that!'}</p>`;$('modalBtn').textContent='Nochmal · Play again';overlay.classList.remove('hidden');$('gameMenuBtn').classList.remove('hidden');$('startBtn').textContent='▶ Play again';}
+$('startBtn').addEventListener('click',startGame);$('modalBtn').addEventListener('click',startGame);
+// Static preview before play: all nine combinations in one shuffled line.
+target=allCombos()[0];row=shuffle(allCombos());renderTarget();renderRow();renderStats();
+})();
+</script></body></html>
